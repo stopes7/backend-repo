@@ -22,9 +22,8 @@ jobs:
         cache: maven
 
     - name: Build backend
-      run: |
-        cd backend-repo
-        mvn clean package -DskipTests
+      run: mvn clean package -DskipTests
+      working-directory: backend-repo
 
     - name: Docker Login
       uses: docker/login-action@v2
