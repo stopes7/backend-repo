@@ -52,7 +52,7 @@ jobs:
         run: |
           docker-compose pull
           docker-compose up -d --build
-        working-directory: backend-repo
+        working-directory: ./
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
