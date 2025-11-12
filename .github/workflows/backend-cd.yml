@@ -40,12 +40,12 @@ jobs:
 
       # 6️⃣ Build Docker image
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest ./backend-repo
         working-directory: ./
 
       # 7️⃣ Push Docker image
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest ./backend-repo
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest 
 
       # 8️⃣ Deploy via docker-compose
       - name: Deploy
