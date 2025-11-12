@@ -50,7 +50,6 @@ jobs:
       # 8️⃣ Deploy via docker-compose
       - name: Deploy
         run: |
-          cd ./task6
           docker compose pull
           docker compose up -d --build
         env:
