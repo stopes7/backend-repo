@@ -50,8 +50,8 @@ jobs:
       # 8️⃣ Deploy via docker-compose
       - name: Deploy
         run: |
-          docker-compose pull
-          docker-compose up -d --build
+          docker compose pull
+          docker compose up -d --build
         working-directory: ./
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
