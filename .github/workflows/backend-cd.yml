@@ -40,9 +40,8 @@ jobs:
       # 6️⃣ Deploy via docker-compose
       - name: Deploy via docker-compose
         run: |
-          cd $GITHUB_WORKSPACE
-          docker compose pull
-          docker compose up -d --build
+          docker compose -f ../docker-compose.yml pull
+          docker compose -f ../docker-compose.yml up -d --build
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
