@@ -11,11 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Checkout репозитория
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2️⃣ Установка JDK 11 и Maven
     - name: Set up Java 11 and Maven
       uses: actions/setup-java@v3
       with:
@@ -23,26 +21,23 @@ jobs:
         java-version: '11'
         cache: maven
 
-    # 3️⃣ Сборка backend
     - name: Build backend
-      run: mvn clean package -DskipTests
+      run: |
+        cd backend-repo
+        mvn clean package -DskipTests
 
-    # 4️⃣ Docker login
-    - name: Login to Docker Hub
+    - name: Docker Login
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # 5️⃣ Build Docker image
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest backend-repo
 
-    # 6️⃣ Push Docker image
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest
 
-    # 7️⃣ Deploy через docker-compose
     - name: Deploy with docker-compose
       run: |
         docker-compose pull
@@ -50,3 +45,4 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
