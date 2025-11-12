@@ -11,19 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Checkout code
-    - name: Checkout repository
+    # 1️⃣ Checkout репозитория
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2️⃣ Setup Java + Maven cache
-    - name: Set up JDK 11 and Maven
+    # 2️⃣ Установка JDK 11 и Maven
+    - name: Set up Java 11 and Maven
       uses: actions/setup-java@v3
       with:
         distribution: temurin
         java-version: '11'
         cache: maven
 
-    # 3️⃣ Build backend (skip tests)
+    # 3️⃣ Сборка backend
     - name: Build backend
       run: mvn clean package -DskipTests
 
@@ -36,20 +36,17 @@ jobs:
 
     # 5️⃣ Build Docker image
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest .
 
     # 6️⃣ Push Docker image
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/kanban-backend:latest
 
-    # 7️⃣ Deploy to remote server
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cd /path/to/project
-          docker-compose pull
-          docker-compose up -d --build
+    # 7️⃣ Deploy через docker-compose
+    - name: Deploy with docker-compose
+      run: |
+        docker-compose pull
+        docker-compose up -d --build
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
