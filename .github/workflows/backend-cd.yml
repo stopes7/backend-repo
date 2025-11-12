@@ -24,9 +24,7 @@ jobs:
 
       # 3️⃣ Build backend (skip tests)
       - name: Build backend
-        run: |
-          cd backend-repo
-          mvn clean package -DskipTests
+        run: mvn clean package -DskipTests
 
       # 4️⃣ Docker login
       - name: Docker Login
