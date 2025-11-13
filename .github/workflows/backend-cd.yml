@@ -41,7 +41,6 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}:latest
 
       - name: Deploy with docker-compose
-        working-directory: task6
         env:
           IMAGE_TAG: ${{ github.sha }}
           IMAGE: ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
