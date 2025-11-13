@@ -25,7 +25,6 @@ jobs:
           cache: 'maven'
 
       - name: Build Java artifact
-        working-directory: task6/backend-repo
         run: mvn -B clean package -DskipTests
 
       - name: Log in to Docker registry
