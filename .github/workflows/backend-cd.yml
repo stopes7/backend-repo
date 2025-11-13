@@ -7,9 +7,8 @@ on:
 
 env:
   IMAGE_NAME: backend-app
-  # Если вы используете другой реестр (например, ghcr.io или registry.company.com),
-  # добавьте в Secrets переменную DOCKER_REGISTRY. Иначе используется docker.io
   DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY || 'docker.io' }}
+  IMAGE_REPOSITORY: ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
 
 jobs:
   build-and-deploy:
@@ -23,11 +22,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '8'
           cache: 'maven'
 
-      - name: Build (skip tests)
-        run: mvn clean package -DskipTests
+      - name: Build Java artifact
+        working-directory: task6/backend-repo
+        run: mvn -B clean package -DskipTests
 
       - name: Log in to Docker registry
         uses: docker/login-action@v3
@@ -39,14 +39,20 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ${{ github.workspace }}/backend-repo
-          file: ${{ github.workspace }}/backend-repo/Dockerfile
+          context: ${{ github.workspace }}/task6/backend-repo
+          file: ${{ github.workspace }}/task6/backend-repo/Dockerfile
           push: true
           tags: |
-            ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
+            ${{ env.IMAGE_REPOSITORY }}:latest
 
       - name: Deploy with docker-compose
+        working-directory: task6
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE: ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
         run: |
-          docker-compose -f task6/docker-compose.yml pull
-          docker-compose -f task6/docker-compose.yml up -d --build --remove-orphans
+          docker-compose -f docker-compose.yml pull || true
+          docker-compose -f docker-compose.yml up -d --build --remove-orphans
+
+
