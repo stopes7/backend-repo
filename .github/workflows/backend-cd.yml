@@ -2,13 +2,12 @@ name: CI/CD Backend
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 env:
   IMAGE_NAME: backend-app
-  DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY || 'docker.io' }}
-  IMAGE_REPOSITORY: ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
+  IMAGE_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
 
 jobs:
   build-and-deploy:
@@ -22,7 +21,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '8'
+          java-version: '11'
           cache: 'maven'
 
       - name: Build Java artifact
@@ -32,9 +31,8 @@ jobs:
       - name: Log in to Docker registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -54,5 +52,6 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml pull || true
           docker-compose -f docker-compose.yml up -d --build --remove-orphans
+
 
 
