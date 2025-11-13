@@ -16,7 +16,6 @@ services:
   # Spring Boot бэк
   demo_backend:
     build:
-      context: ./backend-repo
       dockerfile: Dockerfile
     container_name: demo_backend
     restart: unless-stopped
