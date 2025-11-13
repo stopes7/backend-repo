@@ -44,8 +44,9 @@ jobs:
     # 7️⃣ Deploy using docker-compose
     - name: Deploy with docker-compose
       run: |
-        docker compose pull
-        docker compose up -d --build
+        # Опционально: остановим старые контейнеры и перезапустим с новым образом.
+        docker-compose -f task6/docker-compose.yml pull || true
+        docker-compose -f task6/docker-compose.yml up -d --build --remove-orphans
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
