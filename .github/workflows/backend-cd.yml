@@ -41,12 +41,13 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}:latest
 
       - name: Deploy with docker-compose
+        working-directory: task6
         env:
           IMAGE_TAG: ${{ github.sha }}
           IMAGE: ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
         run: |
-          docker-compose -f docker-compose.yml pull || true
-          docker-compose -f docker-compose.yml up -d --build --remove-orphans
+          docker compose -f docker-compose.yml pull || true
+          docker compose -f docker-compose.yml up -d --build --remove-orphans
 
 
 
