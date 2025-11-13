@@ -36,9 +36,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: /backend-repo
-          file: /backend-repo/Dockerfile
-          push: true
           tags: |
             ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
             ${{ env.IMAGE_REPOSITORY }}:latest
